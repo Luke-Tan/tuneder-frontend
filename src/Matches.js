@@ -47,14 +47,20 @@ function Matches ({user}) {
             const cards = response.data
             console.log(cards)
             const playlists = []
+            //'https://open.spotify.com/playlist/6YFWvXYAz4hGF2vaTDqsX1?si=XlXdDxE5RLG4tSxzJQbPYA'
+
             for(let url of cards) {
-              const data = await spotifyApi.getPlaylist(url);
+              const parts = url.split('/')
+              const urlId = parts[parts.length - 1]
+              const data = await spotifyApi.getPlaylist(urlId);
               const { images, name, tracks } = data
               console.log(tracks)
               const coverImg = images[0].url
               let playlist = {
                 name,
-                url: coverImg,
+                img: coverImg,
+                url,
+                urlId,
                 tracks
               }
               playlists.push(playlist)
@@ -118,7 +124,7 @@ function Matches ({user}) {
             <div className='card'>
               <div
                 style={{
-                  'backgroundImage': 'url(' + character.url + ')',
+                  'backgroundImage': 'url(' + character.img + ')',
                   'width': '100%',
                   'height': '30%',
                   'backgroundSize': 'cover',
@@ -128,13 +134,14 @@ function Matches ({user}) {
               >
               </div>
               <iframe 
-                src="http://open.spotify.com/embed/playlist/4Mcffg5oDmz5cyd20xDkKr" 
+                src={`http://open.spotify.com/embed/playlist/${character.urlId}`}
                 width="360" height="70%" 
                 style={{borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px'}}
                 frameBorder="0" 
                 allowtransparency="true" 
                 allow="encrypted -media"
               >
+
               </iframe>
             </div>
           </TinderCard>
