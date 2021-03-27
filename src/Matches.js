@@ -75,11 +75,26 @@ function Matches ({user}) {
       }
     });
   }, [])
+
   const swiped = (direction, nameToDelete) => {
-    console.log('removing: ' + nameToDelete)
-    console.log(direction);
     setLastDirection(direction)
     alreadyRemoved.push(nameToDelete)
+
+    if (direction == "left") {
+      console.log("left");
+      return;
+    }
+
+    axios.post('http://https://tuneder.herokuapp.com/swiperight', {
+        swiper: user,
+        swipee: nameToDelete
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   const outOfFrame = (name) => {
