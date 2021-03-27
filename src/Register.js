@@ -9,6 +9,42 @@ const Demo = ({setIsLoggedIn}) => {
   const [playlists, setPlaylists] = useState([1,1,1])
 
   const onFinish = (values: any) => {
+  	const { name,email,password,instagram,facebook } = values
+  	console.log(values)
+  	let playlistLinks = []
+    for(let i = 0; i < playlists.length; i++){
+    	const playlist = values["playlist" + i]
+    	playlistLinks.push(playlist)
+    }
+
+    console.log(playlists)
+
+	firebase.auth().createUserWithEmailAndPassword(email, password)
+	  .then((userCredential) => {
+	    // Signed in 
+	    const user = userCredential.user;
+	    console.log(user)
+		axios.post('http://localhost:4000/createuser', {
+		    name,
+		    id: user.uid,
+		    playlists:playlistLinks,
+		    socials: {
+		    	facebook,
+		    	instagram
+		    }
+		  })
+		  .then(function (response) {
+		    console.log(response);
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		  });
+	  })
+	  .catch((error) => {
+	    const errorCode = error.code;
+	    const errorMessage = error.message;
+	    alert(error.message)
+	  });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -19,39 +55,7 @@ const Demo = ({setIsLoggedIn}) => {
   	setPlaylists([...playlists, 1])
   }
 
-  const register = () => {
-  	const email = document.getElementById('username').value
-  	const password = document.getElementById('password').value
-	firebase.auth().createUserWithEmailAndPassword(email, password)
-	  .then((userCredential) => {
-	    // Signed in 
-	    const user = userCredential.user;
-	    console.log(user)
-	    let playlists = []
-	    for(let i = 0; i < playlists.length; i++){
-
-	    }
-		axios.post('http://localhost:4000', {
-		    firstName: 'Fred',
-		    lastName: 'Flintstone'
-		  })
-		  .then(function (response) {
-		    console.log(response);
-		  })
-		  .catch(function (error) {
-		    console.log(error);
-		  });
-
-	    setIsLoggedIn(true)
-	    
-	  })
-	  .catch((error) => {
-	    const errorCode = error.code;
-	    const errorMessage = error.message;
-	    alert(error.message)
-	  });
-
-  }
+ 
 
   return (
 	  	<div style={{height:'100%',alignItems: 'center', justifyContent:'center'}}>
@@ -64,9 +68,9 @@ const Demo = ({setIsLoggedIn}) => {
 			    >
 			      <Form.Item
 			        label="Email"
-			        name="username"
+			        name="email"
 			      >
-			        <Input id="username"/>
+			        <Input id="email"/>
 			      </Form.Item>
 
 			      <Form.Item
@@ -75,7 +79,12 @@ const Demo = ({setIsLoggedIn}) => {
 			      >
 			        <Input.Password id="password"/>
 			      </Form.Item>
-
+			      <Form.Item
+			        label="Name"
+			        name="name"
+			      >
+			        <Input id="name"/>
+			      </Form.Item>
 			      <Form.Item
 			        label="Instagram"
 			        name="instagram"
@@ -105,7 +114,7 @@ const Demo = ({setIsLoggedIn}) => {
 				  	Add Playlist
 				  </Button>
 			      <Form.Item style={{marginTop:'20px'}}>
-			        <Button onClick={register} style={{left: '25px'}} type="primary" htmlType="submit">
+			        <Button style={{left: '25px'}} type="primary" htmlType="submit">
 			          Register
 			        </Button>
 			      </Form.Item>

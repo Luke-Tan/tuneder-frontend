@@ -8,6 +8,7 @@ const Demo = ({setIsLoggedIn}) => {
   const [isRegistering, setIsRegistering] = useState(false)
 
   const onFinish = (values: any) => {
+  	console.log(values)
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -35,8 +36,6 @@ const Demo = ({setIsLoggedIn}) => {
   const register = () => {
   	setIsRegistering(true)
   }
-
-
 
   return (
   	<>
@@ -69,7 +68,7 @@ const Demo = ({setIsLoggedIn}) => {
 				          Login
 				        </Button>
 
-				        <Button onClick={register} style={{left: '25px'}} type="primary" htmlType="submit">
+				        <Button onClick={register} style={{left: '25px'}} type="primary">
 				          Don't have an account?
 				        </Button>
 				      </Form.Item>
