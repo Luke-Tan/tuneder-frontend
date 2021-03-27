@@ -49,19 +49,20 @@ function Matches ({user}) {
             const playlists = []
             //'https://open.spotify.com/playlist/6YFWvXYAz4hGF2vaTDqsX1?si=XlXdDxE5RLG4tSxzJQbPYA'
 
-            for(let url of cards) {
-              const parts = url.split('/')
+            for(let { id, playlist: playlistUrl } of cards) {
+              const parts = playlistUrl.split('/')
               const urlId = parts[parts.length - 1]
               const data = await spotifyApi.getPlaylist(urlId);
               const { images, name, tracks } = data
-              console.log(tracks)
+
               const coverImg = images[0].url
               let playlist = {
                 name,
                 img: coverImg,
-                url,
+                url: playlistUrl,
                 urlId,
-                tracks
+                tracks,
+                userId: id
               }
               playlists.push(playlist)
             }
@@ -76,7 +77,7 @@ function Matches ({user}) {
     });
   }, [])
 
-  const swiped = (direction, nameToDelete) => {
+  const swiped = (direction, swipee, nameToDelete) => {
     setLastDirection(direction)
     alreadyRemoved.push(nameToDelete)
 
@@ -84,10 +85,10 @@ function Matches ({user}) {
       console.log("left");
       return;
     }
-
-    axios.post('http://https://tuneder.herokuapp.com/swiperight', {
+    console.log(swipee)
+    axios.post('http://tuneder.herokuapp.com/swiperight', {
         swiper: user,
-        swipee: nameToDelete
+        swipee: swipee
       })
       .then(function (response) {
         console.log(response);
@@ -134,7 +135,7 @@ function Matches ({user}) {
             className='swipe' 
             key={character.name} 
             preventSwipe={['down', 'up']}
-            onSwipe={(dir) => swiped(dir, character.name)} 
+            onSwipe={(dir) => swiped(dir, character.userId)} 
             onCardLeftScreen={() => outOfFrame(character.name)}>
             <div className='card'>
               <div
