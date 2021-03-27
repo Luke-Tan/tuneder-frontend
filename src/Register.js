@@ -24,7 +24,7 @@ const Demo = ({setIsLoggedIn}) => {
 	    // Signed in 
 	    const user = userCredential.user;
 	    console.log(user)
-		axios.post('http://localhost:4000/createuser', {
+		axios.post('http://tuneder.herokuapp.com/createuser', {
 		    name,
 		    id: user.uid,
 		    playlists:playlistLinks,
