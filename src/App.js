@@ -21,7 +21,21 @@ firebase.initializeApp(firebaseConfig);
 
 function Advanced () {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        var uid = user.uid;
+        // ...
+        setIsLoggedIn(true)
+      } else {
+        // User is signed out
+        // ...
+        setIsLoggedIn(false)
+      }
+    });
+  }, [])
   return(
     <>
     {

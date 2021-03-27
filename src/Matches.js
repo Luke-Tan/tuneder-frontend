@@ -5,6 +5,8 @@ import TinderCard from 'react-tinder-card'
 import Spotify from 'spotify-web-api-js'
 import axios from 'axios'
 import request from 'request'
+import { Button } from 'antd'
+import firebase from 'firebase'
 
 
 const alreadyRemoved = []
@@ -91,8 +93,17 @@ function Matches () {
     }
   }
 
+  const logout = () => {
+    firebase.auth().signOut().then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
   return (
     <div className="matches-page">
+      <Button onClick={logout}>Sign out</Button>
       <script src="https://sdk.scdn.co/spotify-player.js"></script>
       <link href='https://fonts.googleapis.com/css?family=Damion&display=swap' rel='stylesheet' />
       <link href='https://fonts.googleapis.com/css?family=Alatsi&display=swap' rel='stylesheet' />
