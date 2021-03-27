@@ -45,6 +45,7 @@ function Matches ({user}) {
           })
           .then(async function (response) {
             const cards = response.data
+            console.log(cards)
             const playlists = []
             for(let url of cards) {
               const data = await spotifyApi.getPlaylist(url);
@@ -59,6 +60,7 @@ function Matches ({user}) {
               playlists.push(playlist)
             }
             setPlaylists(playlists)
+            console.log(playlists)
             charactersState = playlists
           })
           .catch(function (error) {

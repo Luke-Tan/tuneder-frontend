@@ -13,7 +13,7 @@ const Demo = ({setIsLoggedIn}) => {
   	console.log(values)
   	let playlistLinks = []
     for(let i = 0; i < playlists.length; i++){
-    	const playlist = values["playlist" + i]
+    	const playlist = values["playlist" + (i+1)]
     	playlistLinks.push(playlist)
     }
 
