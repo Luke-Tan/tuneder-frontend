@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useMemo, useEffect } from 'react'
+import Matches from './Matches'
+import Login from './Login'
+import './App.css'
+import 'antd/dist/antd.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import firebase from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAO76Hlsg2Gras17FJdsMJ_Ov_h1rYk4cI",
+  authDomain: "tuneder-804e8.firebaseapp.com",
+  databaseURL: "https://tuneder-804e8-default-rtdb.firebaseio.com",
+  projectId: "tuneder-804e8",
+  storageBucket: "tuneder-804e8.appspot.com",
+  messagingSenderId: "269614238814",
+  appId: "1:269614238814:web:02c72dfca6f0d70bc838cf"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+
+function Advanced () {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  return(
+    <>
+    {
+      isLoggedIn ? 
+      <Matches/> :
+      <Login setIsLoggedIn={setIsLoggedIn}/> 
+    }
+    </>
+  )
 }
 
-export default App;
+export default Advanced
