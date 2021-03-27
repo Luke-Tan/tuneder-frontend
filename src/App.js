@@ -28,7 +28,7 @@ function Advanced () {
         // https://firebase.google.com/docs/reference/js/firebase.User
         var uid = user.uid;
         // ...
-        setIsLoggedIn(true)
+        setIsLoggedIn(uid)
       } else {
         // User is signed out
         // ...
@@ -40,7 +40,7 @@ function Advanced () {
     <>
     {
       isLoggedIn ? 
-      <Matches/> :
+      <Matches user={isLoggedIn}/> :
       <Login setIsLoggedIn={setIsLoggedIn}/> 
     }
     </>

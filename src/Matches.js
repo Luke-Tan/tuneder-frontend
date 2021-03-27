@@ -27,7 +27,7 @@ const authOptions = {
   json: true
 };
 
-function Matches () {
+function Matches ({user}) {
   const [playlists, setPlaylists] = useState([])
   const [lastDirection, setLastDirection] = useState()
 
@@ -40,32 +40,29 @@ function Matches () {
         var token = body.access_token;
         spotifyApi.setAccessToken(token)
         // Get list of playlist Ids
-        spotifyApi.getPlaylist('4Mcffg5oDmz5cyd20xDkKr')
-          .then(function(data) {
-            const { images, name, tracks } = data
-            console.log(tracks)
-            const coverImg = images[0].url
-            let playlists = [{
-              name,
-              url: coverImg,
-              tracks
-            },
-            {
-              name: 'hasdf',
-              url: coverImg
-            },
-            {
-              name: 'asfqwef',
-              url: coverImg
-            },
-            {
-              name: 'afwefqwefqwef',
-              url: coverImg
-            }]
+        axios.post('http://tuneder.herokuapp.com/cards', {
+              swiper: user
+          })
+          .then(async function (response) {
+            const cards = response.data
+            const playlists = []
+            for(let url of cards) {
+              const data = await spotifyApi.getPlaylist(url);
+              const { images, name, tracks } = data
+              console.log(tracks)
+              const coverImg = images[0].url
+              let playlist = {
+                name,
+                url: coverImg,
+                tracks
+              }
+              playlists.push(playlist)
+            }
             setPlaylists(playlists)
             charactersState = playlists
-          }, function(err) {
-            console.error(err);
+          })
+          .catch(function (error) {
+            console.log(error);
           });
       }
     });
