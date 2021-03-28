@@ -21,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SelectedListItem({user, isHidden}) {
+export default function SelectedListItem({user, isHidden, notifs}) {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [matches, setMatches] = useState([]);
-  console.log(matches)
+  
   useEffect(() => {
     axios.post('http://tuneder.herokuapp.com/matches', {
       swiper: user
@@ -39,7 +39,7 @@ export default function SelectedListItem({user, isHidden}) {
     }).catch(err => {
       console.log(err);
     })
-  }, [])
+  }, [notifs])
 
 
   const handleListItemClick = (event, index) => {
