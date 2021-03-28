@@ -89,6 +89,7 @@ function Cards({ user, isHidden }) {
       return;
     }
     console.log(swipee)
+    console.log(playlistToDelete)
     axios.post('http://tuneder.herokuapp.com/swiperight', {
       swiper: user,
       swipee: swipee,
@@ -109,10 +110,10 @@ function Cards({ user, isHidden }) {
   }
 
   const swipe = (dir) => {
-    const cardsLeft = playlists.filter(playlist => !alreadyRemoved.includes(playlist.playlistUrl))
+    const cardsLeft = playlists.filter(playlist => !alreadyRemoved.includes(playlist.url))
     if (cardsLeft.length) {
-      const toBeRemoved = cardsLeft[cardsLeft.length - 1].playlistUrl // Find the card object to be removed
-      const index = playlists.map(person => person.playlistUrl).indexOf(toBeRemoved) // Find the index of which to make the reference to
+      const toBeRemoved = cardsLeft[cardsLeft.length - 1].url // Find the card object to be removed
+      const index = playlists.map(person => person.url).indexOf(toBeRemoved) // Find the index of which to make the reference to
       alreadyRemoved.push(toBeRemoved) // Make sure the next card gets removed next time if this card do not have time to exit the screen
       childRefs[index].current.swipe(dir) // Swipe the card!
     }
@@ -142,7 +143,7 @@ function Cards({ user, isHidden }) {
                     className='swipe'
                     key={playlist.name}
                     preventSwipe={['down', 'up']}
-                    onSwipe={(dir) => swiped(dir, playlist.userId, playlist.playlistUrl)}
+                    onSwipe={(dir) => swiped(dir, playlist.userId, playlist.url)}
                     onCardLeftScreen={() => outOfFrame(playlist.name)}>
                     <div className='tinder-card'>
                       <div

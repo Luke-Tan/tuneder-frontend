@@ -25,7 +25,7 @@ export default function SelectedListItem({user, isHidden}) {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [matches, setMatches] = useState([]);
-
+  console.log(matches)
   useEffect(() => {
     axios.post('http://tuneder.herokuapp.com/matches', {
       swiper: user
@@ -35,8 +35,6 @@ export default function SelectedListItem({user, isHidden}) {
       resp.forEach(match => {
         matches.push(match)
       });
-      console.log(matches);
-      console.log(selectedIndex)
       setMatches(matches);
     }).catch(err => {
       console.log(err);
@@ -68,7 +66,7 @@ export default function SelectedListItem({user, isHidden}) {
             </ListItem>
           )}
         </List>  
-        <Chat user={user} chatee={matches.length == 0 ? 'null' : matches[selectedIndex].id}/>
+        <Chat user={user} chatee={matches.length == 0 ? 'null' : matches[selectedIndex]}/>
       </div>
     </div>
   );
