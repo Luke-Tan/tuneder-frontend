@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import Matches from './Matches'
+import Cards from './Cards'
 import Login from './Login'
 import './App.css'
 import 'antd/dist/antd.css';
@@ -40,7 +40,7 @@ function Advanced () {
     <>
     {
       isLoggedIn ? 
-      <Matches user={isLoggedIn}/> :
+      <Cards user={isLoggedIn}/> :
       <Login setIsLoggedIn={setIsLoggedIn}/> 
     }
     </>
