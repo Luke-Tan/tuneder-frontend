@@ -11,7 +11,7 @@ import Matches from './Matches'
 
 const t = true;
 const alreadyRemoved = []
-let charactersState = []
+let playlistsState = []
 const spotifyApi = new Spotify();
 const client_id = 'ac5b377896344935a049b433bef89eed'
 const client_secret = '021cfacd857d4f709b3b6f0a6e5a96be'
@@ -28,9 +28,10 @@ const authOptions = {
   json: true
 };
 
-function Cards({ user }) {
+function Cards({ user, isHidden }) {
   const [playlists, setPlaylists] = useState([])
   const [lastDirection, setLastDirection] = useState()
+  const [isMatches, setIsMatches] = useState(false)
 
   const childRefs = useMemo(() => Array(10).fill(0).map(i => React.createRef()), [])
 
@@ -45,6 +46,7 @@ function Cards({ user }) {
           swiper: user
         })
           .then(async function (response) {
+            console.log('yo')
             const cards = response.data
             console.log(cards)
             const playlists = []
@@ -69,7 +71,7 @@ function Cards({ user }) {
             }
             setPlaylists(playlists)
             console.log(playlists)
-            charactersState = playlists
+            playlistsState = playlists
           })
           .catch(function (error) {
             console.log(error);
@@ -78,9 +80,9 @@ function Cards({ user }) {
     });
   }, [])
 
-  const swiped = (direction, swipee, nameToDelete) => {
+  const swiped = (direction, swipee, playlistToDelete) => {
     setLastDirection(direction)
-    alreadyRemoved.push(nameToDelete)
+    alreadyRemoved.push(playlistToDelete)
 
     if (direction == "left") {
       console.log("left");
@@ -89,7 +91,8 @@ function Cards({ user }) {
     console.log(swipee)
     axios.post('http://tuneder.herokuapp.com/swiperight', {
       swiper: user,
-      swipee: swipee
+      swipee: swipee,
+      playlist: playlistToDelete
     })
       .then(function (response) {
         console.log(response);
@@ -101,15 +104,15 @@ function Cards({ user }) {
 
   const outOfFrame = (name) => {
     console.log(name + ' left the screen!')
-    charactersState = charactersState.filter(character => character.name !== name)
-    setPlaylists(charactersState)
+    playlistsState = playlistsState.filter(playlist => playlist.name !== name)
+    setPlaylists(playlistsState)
   }
 
   const swipe = (dir) => {
-    const cardsLeft = playlists.filter(person => !alreadyRemoved.includes(person.name))
+    const cardsLeft = playlists.filter(playlist => !alreadyRemoved.includes(playlist.playlistUrl))
     if (cardsLeft.length) {
-      const toBeRemoved = cardsLeft[cardsLeft.length - 1].name // Find the card object to be removed
-      const index = playlists.map(person => person.name).indexOf(toBeRemoved) // Find the index of which to make the reference to
+      const toBeRemoved = cardsLeft[cardsLeft.length - 1].playlistUrl // Find the card object to be removed
+      const index = playlists.map(person => person.playlistUrl).indexOf(toBeRemoved) // Find the index of which to make the reference to
       alreadyRemoved.push(toBeRemoved) // Make sure the next card gets removed next time if this card do not have time to exit the screen
       childRefs[index].current.swipe(dir) // Swipe the card!
     }
@@ -126,26 +129,25 @@ function Cards({ user }) {
   return (
     <>
       {
-        true ? <Matches user={user} /> :
+        isMatches ? <Matches user={user} /> :
           (
-            <div className="matches-page">
-              <Button onClick={logout}>Sign out</Button>
+            <div className="matches-page" style={{display: `${isHidden == 0 ? 'flex' : 'none'}`}}>
               <script src="https://sdk.scdn.co/spotify-player.js"></script>
               <link href='https://fonts.googleapis.com/css?family=Damion&display=swap' rel='stylesheet' />
               <link href='https://fonts.googleapis.com/css?family=Alatsi&display=swap' rel='stylesheet' />
               <div className='cardContainer'>
-                {playlists.map((character, index) =>
+                {playlists.map((playlist, index) =>
                   <TinderCard
                     ref={childRefs[index]}
                     className='swipe'
-                    key={character.name}
+                    key={playlist.name}
                     preventSwipe={['down', 'up']}
-                    onSwipe={(dir) => swiped(dir, character.userId)}
-                    onCardLeftScreen={() => outOfFrame(character.name)}>
-                    <div className='card'>
+                    onSwipe={(dir) => swiped(dir, playlist.userId, playlist.playlistUrl)}
+                    onCardLeftScreen={() => outOfFrame(playlist.name)}>
+                    <div className='tinder-card'>
                       <div
                         style={{
-                          'backgroundImage': 'url(' + character.img + ')',
+                          'backgroundImage': 'url(' + playlist.img + ')',
                           'width': '100%',
                           'height': '30%',
                           'backgroundSize': 'cover',
@@ -155,7 +157,7 @@ function Cards({ user }) {
                       >
                       </div>
                       <iframe
-                        src={`http://open.spotify.com/embed/playlist/${character.urlId}`}
+                        src={`http://open.spotify.com/embed/playlist/${playlist.urlId}`}
                         width="360" height="70%"
                         style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px' }}
                         frameBorder="0"

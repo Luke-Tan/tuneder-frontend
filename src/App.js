@@ -5,6 +5,7 @@ import './App.css'
 import 'antd/dist/antd.css';
 
 import firebase from "firebase/app";
+import Main from './Main'
 
 const firebaseConfig = {
   apiKey: "AIzaSyAO76Hlsg2Gras17FJdsMJ_Ov_h1rYk4cI",
@@ -40,7 +41,7 @@ function Advanced () {
     <>
     {
       isLoggedIn ? 
-      <Cards user={isLoggedIn}/> :
+      <Main user={isLoggedIn}/> :
       <Login setIsLoggedIn={setIsLoggedIn}/> 
     }
     </>

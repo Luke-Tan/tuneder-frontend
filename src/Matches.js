@@ -1,16 +1,29 @@
-import React, { useState, useMemo, useEffect } from 'react'
 import './App.css'
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import MatchCard from './MatchCard'
+import React, {useState, useEffect} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import InboxIcon from '@material-ui/icons/Inbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
 import axios from 'axios'
 
-function Matches({ user }) {
+import Chat from './Chat'
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+export default function SelectedListItem({user, isHidden}) {
+  const classes = useStyles();
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [matches, setMatches] = useState([]);
 
   useEffect(() => {
@@ -23,29 +36,40 @@ function Matches({ user }) {
         matches.push(match)
       });
       console.log(matches);
+      console.log(selectedIndex)
       setMatches(matches);
     }).catch(err => {
       console.log(err);
     })
   }, [])
 
-  return (
-    <div className="matches-page">
-      <Grid container spacing={3}>
-        {matches.map(match =>
-          <Grid item xs={6}>
-            <MatchCard {...match} />
-          </Grid>
-        )}
-        <Grid item xs={6}>
-          <MatchCard facebook='google.com' instagram='http://instagram.com' name='Hello World!' />
-        </Grid>
-        <Grid item xs={6}>
-          <MatchCard />
-        </Grid>
-      </Grid>
-    </div>
-  )
-}
 
-export default Matches
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
+  return (
+    <div className={'matches-page'} style={{display: `${isHidden == 1 ? 'flex' : 'none'}`}}>
+      <div style={{flex: 1, width:'100%', padding: '5%', flexDirection:'row',display:'flex'}}>
+        <List style={{
+          height:'100%',
+          padding:'0',
+          borderTopLeftRadius:'20px',borderBottomLeftRadius:'20px',
+          width:'256px', alignSelf:'flex-start',backgroundColor:'white',
+          }}component="nav" aria-label="main mailbox folders">
+          {matches.map((match,index) => 
+            <ListItem
+              style={{paddingLeft: '44px', 'paddingRight': '44px'}}
+              button
+              selected={selectedIndex === index}
+              onClick={(event) => handleListItemClick(event, index)}
+            >
+              <ListItemText primary={match.name} />
+            </ListItem>
+          )}
+        </List>  
+        <Chat user={user} chatee={matches.length == 0 ? 'null' : matches[selectedIndex].id}/>
+      </div>
+    </div>
+  );
+}
