@@ -3,6 +3,17 @@ import { Card, Form, Input, Button, Checkbox } from 'antd';
 import Register from './Register'
 import firebase from "firebase/app";
 import "firebase/auth";
+import { Image } from 'antd';
+
+export function Logo() {
+  return (
+    <img
+      style={{marginBottom: '24px'}}
+      width={400}
+      src="../tunederlogo.jpeg"
+    />
+  );
+}
 
 const Demo = ({setIsLoggedIn}) => {
   const [isRegistering, setIsRegistering] = useState(false)
@@ -40,7 +51,8 @@ const Demo = ({setIsLoggedIn}) => {
   	<>
   		{
   			isRegistering ? <Register/> :
-		  	<div style={{height:'100%',alignItems: 'center', justifyContent:'center'}}>
+		  	<div style={{backgroundColor:'#b6e9fb',height:'100%',alignItems: 'center', justifyContent:'center'}}>
+		  		<Logo/>
 			  	<Card style={{width: '60%'}}>
 				    <Form
 				      name="basic"

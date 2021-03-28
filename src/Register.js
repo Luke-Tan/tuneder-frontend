@@ -4,12 +4,12 @@ import Register from './Register'
 import firebase from "firebase/app";
 import "firebase/auth";
 import axios from 'axios'
-
+import { Logo } from './Login'
 const Demo = ({setIsLoggedIn}) => {
   const [playlists, setPlaylists] = useState([1,1,1])
 
   const onFinish = (values: any) => {
-  	const { name,email,password,instagram,facebook } = values
+  	const { name,email,password } = values
   	console.log(values)
   	let playlistLinks = []
     for(let i = 0; i < playlists.length; i++){
@@ -29,8 +29,8 @@ const Demo = ({setIsLoggedIn}) => {
 		    id: user.uid,
 		    playlists:playlistLinks,
 		    socials: {
-		    	facebook,
-		    	instagram
+		    	facebook: '',
+		    	instagram: ''
 		    }
 		  })
 		  .then(function (response) {
@@ -55,10 +55,10 @@ const Demo = ({setIsLoggedIn}) => {
   	setPlaylists([...playlists, 1])
   }
 
- 
 
   return (
-	  	<div style={{height:'100%',alignItems: 'center', justifyContent:'center'}}>
+	  	<div style={{backgroundColor:'#b6e9fb',height:'100%',alignItems: 'center', justifyContent:'center'}}>
+	  		<Logo/>
 		  	<Card style={{width: '60%'}}>
 			    <Form
 			      name="basic"
@@ -84,19 +84,6 @@ const Demo = ({setIsLoggedIn}) => {
 			        name="name"
 			      >
 			        <Input id="name"/>
-			      </Form.Item>
-			      <Form.Item
-			        label="Instagram"
-			        name="instagram"
-			      >
-			        <Input id="instagram"/>
-			      </Form.Item>
-
-			      <Form.Item
-			        label="Facebook"
-			        name="facebook"
-			      >
-			        <Input id="facebook"/>
 			      </Form.Item>
 
 			      {
